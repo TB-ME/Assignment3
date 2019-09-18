@@ -1,9 +1,7 @@
 %Import the image
-I = im2double(imread('GreyRectangle.tif'));
-%Getting the RGB from the img
-img = I(:,:,1:3);
+I = loadTIF('Resources/GreyRectangle.tif');
 [m,n,f] = size(I);
-figure, imshow(I(:,:,1:3));
+figure, imshow(I);
 
 
 %Rotate the image by 30 degrees
