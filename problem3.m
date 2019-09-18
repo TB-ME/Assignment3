@@ -5,7 +5,7 @@ wd = wd(:,:,1:3);
 wr = imread('WhiteRectangle2019.tif');
 wr = wr(:,:,1:3);
 
-ws = imread('WhiteRectangle2019.tif');
+ws = imread('WhiteSquare2019.tif');
 ws = ws(:,:,1:3);
 
 wt = imread('WhiteTriangle2019.tif');
