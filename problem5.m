@@ -2,13 +2,14 @@
 %Input image and binarise
 %Scan through line by line until a desired pixel is found
 %Check in every direction until undesired pixel is found and record the max and min location values and store
-%Calculate centre of the blob and label object
-%If centre is the same as another blob discard as blob has already been detected
+%Extract blob to new image image and label figure
+%Repeat until image has been completely scanned
 
 %Import image
 WhiteMix = loadTIF('Resources/WhiteMix2019.tif');
 
-%convert image to greyscale
+%Apply Filter
+%convert image to greyscale and binarise
 I = double(WhiteMix(:,:,1)/3 + WhiteMix(:,:,2)/3 + WhiteMix(:,:,3)/3);
 [m,n] = size(I);
 Ithreshold = zeros(m,n);
@@ -25,16 +26,46 @@ end
 Ithreshold = uint8(Ithreshold);
 Ib = imbinarize(Ithreshold);
 
-%Apply Filter
+%Main algorithm:
+%Cycle through pixels row-wise
+blob_count = 0;
+for i = 1:m
+    for j = 1:n
+        %Once a bright pixel is encountered move down the column and along row in both directions
+        if Ib(i,j) == 1
+            ymin, ymax = i;
+            xmin, xmax = j;
+            y = i;
+            x = j;
+            %increment y value and check x values until limits of blob are reached.
+            while Ib(y,x) == 1
+                while Ib(y,x) == 1
+                    xmin = x;
+                    x = x - 1;
+                end
+                x = j; %reset x coordinate
+                while Ib(y,x) == 1
+                    xmax = x;
+                    x = x + 1;
+                end
+                x = j; %reset x coordinate
+                ymax = y;
+                y = y + 1
+            end
 
-%Follow Line
+            %Remove blob from Ib and blacken.
+            %Add shape to self contained blob
+            blob = zeros(size(Ib));
+            blob = (xmin:xmax,ymin:ymax) = Ib(xmin:xmax,ymin:ymax);
 
-%Crop out shape
-    %First find the boundary box that contains the image and then move that to its own image.
-    %Blob? = zeros(size(Ib));
-    %Blob?(xmin:xmax,ymin:ymax) = Ib(xmin:xmax,ymin:ymax);
-    %Ib(xmin:xmax,ymin:ymax) = 0
+            %Blacken area of original image that contained
+            Ib(xmin:xmax,ymin:ymax) = 0;
 
-%Add shape to self contained blob
+            %display blob in separate labelled figure and continue.
+            blob_count = blob_count + 1;
+            figure, imshow(Ib), title(['Blob ', blob_count]);
 
-%Repeat till image is completely black
+            %Repeat till image is completely black
+        end
+    end
+end
