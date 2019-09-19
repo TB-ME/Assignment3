@@ -2,11 +2,13 @@
 %Input image and binarise
 %Scan through line by line until a desired pixel is found
 %Check in every direction until undesired pixel is found and record the max and min location values and store
-%Extract blob to new image image and label figure
+%Extract blob to new image, remove blob from previous image and label figure
 %Repeat until image has been completely scanned
 
 %Import image
-WhiteMix = loadTIF('Resources/WhiteMix2019.tif');
+%WhiteMix = loadTIF('Resources/WhiteMix2019.tif');
+WhiteMix = imread('WhiteMix2019.tif');
+%figure, imshow(WhiteMix);
 
 %Apply Filter
 %convert image to greyscale and binarise
@@ -25,6 +27,7 @@ end
 
 Ithreshold = uint8(Ithreshold);
 Ib = imbinarize(Ithreshold);
+figure, imshow(Ib);
 
 %Main algorithm:
 %Cycle through pixels row-wise
@@ -33,8 +36,8 @@ for i = 1:m
     for j = 1:n
         %Once a bright pixel is encountered move down the column and along row in both directions
         if Ib(i,j) == 1
-            ymin, ymax = i;
-            xmin, xmax = j;
+            ymin = i; ymax = i;
+            xmin = j; xmax = j;
             y = i;
             x = j;
             %increment y value and check x values until limits of blob are reached.
@@ -50,20 +53,23 @@ for i = 1:m
                 end
                 x = j; %reset x coordinate
                 ymax = y;
-                y = y + 1
+                y = y + 1;
             end
 
             %Remove blob from Ib and blacken.
             %Add shape to self contained blob
             blob = zeros(size(Ib));
-            blob = (xmin:xmax,ymin:ymax) = Ib(xmin:xmax,ymin:ymax);
+            blob(ymin:ymax,xmin:xmax) = Ib(ymin:ymax,xmin:xmax);
 
             %Blacken area of original image that contained
-            Ib(xmin:xmax,ymin:ymax) = 0;
+            Ib(ymin:ymax,xmin:xmax) = 0;
 
             %display blob in separate labelled figure and continue.
             blob_count = blob_count + 1;
-            figure, imshow(Ib), title(['Blob ', blob_count]);
+            figure, imshow(blob);
+            title(['Blob ', num2str(blob_count)]);
+            
+            figure, imshow(Ib);
 
             %Repeat till image is completely black
         end
