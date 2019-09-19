@@ -7,7 +7,6 @@
 
 %Import image
 WhiteMix = loadTIF('Resources/WhiteMixComplex2019.tif');
-imshow(WhiteMix);
 %WhiteMix = imread('WhiteMix2019.tif');
 %figure, imshow(WhiteMix);
 
@@ -46,9 +45,8 @@ for i = 1:m
             y = i;
             x = j;
             
-            %increment y value and check x values until limits of blob are reached.
-            %make so it that complex shapes can be added
-            blob_map = [];
+            %cropping out the blob
+            blob = zeros(m,n);
             while Ib_temp(y,x) == 1
                 while Ib_temp(y,x) == 1
                     xmin = x;
@@ -59,21 +57,26 @@ for i = 1:m
                     xmax = x;
                     x = x + 1;
                 end
-                blob_map = [blob_map;xmin,xmax];
+                %Get blob
+                blob(y,xmin:xmax) = I(y,xmin:xmax);
+                %Blacken blob
+                Ib_temp(y,xmin:xmax) = 0;
+                
+                %Check if any vertical pixels have been missed
+                for x_vert = xmin:xmax
+                    y_vert = y-1;
+                    while Ib_temp(y_vert,x_vert) == 1
+                        blob(y_vert,x_vert) = I(y_vert,x_vert);
+                        Ib_temp(y_vert,x_vert) = 0;
+                        y_vert = y_vert - 1;
+                    end
+                end
+                
+                %Itr params
                 x = j; %reset x coordinate
                 ymax = y;
                 y = y + 1;
             end
-
-            %Remove blob from Ib and blacken.
-            %Add shape to self contained blob
-            blob = zeros(size(I));
-            for blobitr = 1:(ymax-ymin)
-                blob(blobitr+ymin,blob_map(blobitr,1):blob_map(blobitr,2)) = I(blobitr+ymin,blob_map(blobitr,1):blob_map(blobitr,2));
-            end
-
-            %Blacken area of original image that contained
-            Ib_temp(ymin:ymax,xmin:xmax) = 0;
 
             %display blob in separate labelled figure and continue.
             blob_count = blob_count + 1;
