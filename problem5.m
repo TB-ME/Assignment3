@@ -7,7 +7,6 @@
 
 %Import image
 WhiteMix = loadTIF('Resources/WhiteMix2019.tif');
-imshow(WhiteMix);
 %WhiteMix = imread('WhiteMix2019.tif');
 %figure, imshow(WhiteMix);
 
@@ -28,15 +27,15 @@ end
 
 Ithreshold = uint8(Ithreshold);
 Ib = imbinarize(Ithreshold);
-figure, imshow(I);
-Ib_temp = I;
+Ib_temp = Ib;
+%figure, imshow(Ib);
 
 %Main algorithm:
 %Cycle through pixels row-wise
 blob_count = 0;
 %Blobs are getting overwritten, creating a variable array so store them all
 %for displaying later
-blob_array = I;
+blob_array = Ib;
 for i = 1:m
     for j = 1:n
         %Once a bright pixel is encountered move down the column and along row in both directions
@@ -49,12 +48,16 @@ for i = 1:m
             %increment y value and check x values until limits of blob are reached.
             while Ib_temp(y,x) == 1
                 while Ib_temp(y,x) == 1
-                    xmin = x;
+                    if xmin >= x
+                        xmin = x;
+                    end
                     x = x - 1;
                 end
                 x = j; %reset x coordinate
                 while Ib_temp(y,x) == 1
-                    xmax = x;
+                    if xmax <= x
+                        xmax = x;
+                    end
                     x = x + 1;
                 end
                 x = j; %reset x coordinate
@@ -64,14 +67,16 @@ for i = 1:m
 
             %Remove blob from Ib and blacken.
             %Add shape to self contained blob
-            blob = zeros(size(I));
-            blob(ymin:ymax,xmin:xmax) = I(ymin:ymax,xmin:xmax);
+            blob = zeros([m,n]);
+            blob(ymin:ymax,xmin:xmax) = Ib(ymin:ymax,xmin:xmax);
+            
+            %display blob in separate labelled figure and continue.
+            blob_count = blob_count + 1;
+            figure, imshow(blob);
+            title(['Blob ', num2str(blob_count)]);
 
             %Blacken area of original image that contained
             Ib_temp(ymin:ymax,xmin:xmax) = 0;
-
-            %display blob in separate labelled figure and continue.
-            blob_count = blob_count + 1;
             
             %Store blobs in array
             [mb,nb,fb] = size(blob_array);
@@ -79,6 +84,7 @@ for i = 1:m
             blob_array = zeros(mb,nb,fb + 1);
             blob_array(:,:,1:fb) = blob_array_temp;
             blob_array(:,:,fb+1) = blob;
+            %figure, imshow(blob_array(:,:,blob_count));
 
             %Repeat till image is completely black
         end
