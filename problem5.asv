@@ -6,7 +6,7 @@
 %Repeat until image has been completely scanned
 
 %Import image
-WhiteMix = loadTIF('Resources/WhiteMixComplex2019.tif');
+WhiteMix = loadTIF('Resources/WhiteMix2019.tif');
 imshow(WhiteMix);
 %WhiteMix = imread('WhiteMix2019.tif');
 %figure, imshow(WhiteMix);
@@ -45,7 +45,6 @@ for i = 1:m
             xmin = j; xmax = j;
             y = i;
             x = j;
-            
             %increment y value and check x values until limits of blob are reached.
             while Ib_temp(y,x) == 1
                 while Ib_temp(y,x) == 1
@@ -64,21 +63,14 @@ for i = 1:m
 
             %Remove blob from Ib and blacken.
             %Add shape to self contained blob
-            blob = zeros(size(I));
-            blob(ymin:ymax,xmin:xmax) = I(ymin:ymax,xmin:xmax);
+            blob = zeros(size(Ib));
+            blob(ymin:ymax,xmin:xmax) = Ib(ymin:ymax,xmin:xmax);
 
             %Blacken area of original image that contained
             Ib_temp(ymin:ymax,xmin:xmax) = 0;
 
             %display blob in separate labelled figure and continue.
             blob_count = blob_count + 1;
-            
-            %Store blobs in array
-            [mb,nb,fb] = size(blob_array);
-            blob_array_temp = blob_array;
-            blob_array = zeros(mb,nb,fb + 1);
-            blob_array(:,:,1:fb) = blob_array_temp;
-            blob_array(:,:,fb+1) = blob;
 
             %Repeat till image is completely black
         end
