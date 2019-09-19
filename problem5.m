@@ -6,8 +6,8 @@
 %Repeat until image has been completely scanned
 
 %Import image
-%WhiteMix = loadTIF('Resources/WhiteMix2019.tif');
-WhiteMix = imread('WhiteMix2019.tif');
+WhiteMix = loadTIF('Resources/WhiteMix2019.tif');
+%WhiteMix = imread('WhiteMix2019.tif');
 %figure, imshow(WhiteMix);
 
 %Apply Filter
@@ -28,6 +28,7 @@ end
 Ithreshold = uint8(Ithreshold);
 Ib = imbinarize(Ithreshold);
 figure, imshow(Ib);
+Ib_temp = Ib;
 
 %Main algorithm:
 %Cycle through pixels row-wise
@@ -35,19 +36,19 @@ blob_count = 0;
 for i = 1:m
     for j = 1:n
         %Once a bright pixel is encountered move down the column and along row in both directions
-        if Ib(i,j) == 1
+        if Ib_temp(i,j) == 1
             ymin = i; ymax = i;
             xmin = j; xmax = j;
             y = i;
             x = j;
             %increment y value and check x values until limits of blob are reached.
-            while Ib(y,x) == 1
-                while Ib(y,x) == 1
+            while Ib_temp(y,x) == 1
+                while Ib_temp(y,x) == 1
                     xmin = x;
                     x = x - 1;
                 end
                 x = j; %reset x coordinate
-                while Ib(y,x) == 1
+                while Ib_temp(y,x) == 1
                     xmax = x;
                     x = x + 1;
                 end
@@ -62,14 +63,14 @@ for i = 1:m
             blob(ymin:ymax,xmin:xmax) = Ib(ymin:ymax,xmin:xmax);
 
             %Blacken area of original image that contained
-            Ib(ymin:ymax,xmin:xmax) = 0;
+            Ib_temp(ymin:ymax,xmin:xmax) = 0;
 
             %display blob in separate labelled figure and continue.
             blob_count = blob_count + 1;
             figure, imshow(blob);
             title(['Blob ', num2str(blob_count)]);
             
-            figure, imshow(Ib);
+            figure, imshow(Ib_temp);
 
             %Repeat till image is completely black
         end
