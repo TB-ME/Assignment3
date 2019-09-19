@@ -47,6 +47,8 @@ for i = 1:m
             x = j;
             
             %increment y value and check x values until limits of blob are reached.
+            %make so it that complex shapes can be added
+            blob_map = [];
             while Ib_temp(y,x) == 1
                 while Ib_temp(y,x) == 1
                     xmin = x;
@@ -57,6 +59,7 @@ for i = 1:m
                     xmax = x;
                     x = x + 1;
                 end
+                blob_map = [blob_map;xmin,xmax];
                 x = j; %reset x coordinate
                 ymax = y;
                 y = y + 1;
@@ -65,7 +68,9 @@ for i = 1:m
             %Remove blob from Ib and blacken.
             %Add shape to self contained blob
             blob = zeros(size(I));
-            blob(ymin:ymax,xmin:xmax) = I(ymin:ymax,xmin:xmax);
+            for blobitr = 1:(ymax-ymin)
+                blob(blobitr+ymin,blob_map(blobitr,1):blob_map(blobitr,2)) = I(blobitr+ymin,blob_map(blobitr,1):blob_map(blobitr,2));
+            end
 
             %Blacken area of original image that contained
             Ib_temp(ymin:ymax,xmin:xmax) = 0;
