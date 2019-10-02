@@ -2,7 +2,7 @@
 %Input image and binarise
 %Scan through line by line until a desired pixel is found
 %Check in every direction until undesired pixel is found and record the max and min location values and store
-%Extract blob to new image, remove blob from previous image and label figure
+%Extract blob to new image, label figure and overwrite previous image
 %Repeat until image has been completely scanned
 
 %Import image
@@ -27,35 +27,32 @@ end
 
 Ithreshold = uint8(Ithreshold);
 Ib = imbinarize(Ithreshold);
-Ib_temp = double(Ib);
+Ib = double(Ib);
 %figure, imshow(Ib);
 
 %Main algorithm:
 %Cycle through pixels row-wise
 blob_count = 2; %Start at 2 to differentiate from other blobs.
 
-%Blobs are getting overwritten, creating a variable array so store them all
-%for displaying later
-%blob_array = Ib;
 for i = 1:m
     for j = 1:n
         %Once a bright pixel is encountered move down the column and along row in both directions
-        if Ib_temp(i,j) == 1
+        if Ib(i,j) == 1
             ymin = i; ymax = i;
             xmin = j; xmax = j;
             y = i;
             x = j;
 
             %increment y value and check x values until limits of blob are reached.
-            while Ib_temp(y,x) == 1
-                while Ib_temp(y,x) == 1
+            while Ib(y,x) == 1
+                while Ib(y,x) == 1
                     if xmin >= x
                         xmin = x;
                     end
                     x = x - 1;
                 end
                 x = j; %reset x coordinate
-                while Ib_temp(y,x) == 1
+                while Ib(y,x) == 1
                     if xmax <= x
                         xmax = x;
                     end
@@ -86,19 +83,13 @@ for i = 1:m
             blob_count = blob_count + 1;
 
             %Overwrite area of original image that contained blob
-            Ib_temp(ymin:ymax,xmin:xmax) = blob(ymin:ymax,xmin:xmax);
-
-            %Store blobs in array
-            %[mb,nb,fb] = size(blob_array);
-            %blob_array_temp = blob_array;
-            % = zeros(mb,nb,fb + 1);
-            %blob_array(:,:,1:fb) = blob_array_temp;
-            %blob_array(:,:,fb+1) = blob;
-            %figure, imshow(blob_array(:,:,blob_count));
+            Ib(ymin:ymax,xmin:xmax) = blob(ymin:ymax,xmin:xmax);
 
             %Repeat till image is completely black
         end
     end
 end
 
-figure, imshow(Ib_temp);
+%Display final result (should look unchanged but array will confirm each blob is labelled correctly)
+figure, imshow(Ib);
+title('Final labelled image');
