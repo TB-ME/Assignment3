@@ -1,0 +1,19 @@
+function [img] = nearestNeighbour_(img,x_max,y_max)
+%Uses the nearest neighbour algorithm to sample points to fill in white
+%spots
+
+temp_img = zeros(size(img));
+
+prev_val = 0;
+for i = 1:x_max
+    for j = 1:y_max
+        if img(i,j) == 0
+            img(i,j) = prev_val;
+        else
+            prev_val = img(i,j);
+        end
+        
+    end
+end
+end
+
