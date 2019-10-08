@@ -44,9 +44,7 @@ for i = 1:m
             xmin = j; xmax = j;
             y = i;
             x = j;
-            
-            %cropping out the blob
-            blob = zeros(m,n);
+          
             while Ib_temp(y,x) == 1
                 while Ib_temp(y,x) == 1
                     xmin = x;
@@ -58,7 +56,7 @@ for i = 1:m
                     x = x + 1;
                 end
                 %Get blob
-                blob(y,xmin:xmax) = I(y,xmin:xmax);
+               I(y,xmin:xmax) = blob_count + 2;
                 %Blacken blob
                 Ib_temp(y,xmin:xmax) = 0;
                 
@@ -66,7 +64,7 @@ for i = 1:m
                 for x_vert = xmin:xmax
                     y_vert = y-1;
                     while Ib_temp(y_vert,x_vert) == 1
-                        blob(y_vert,x_vert) = I(y_vert,x_vert);
+                        I(y_vert,x_vert) = blob_count + 2;
                         Ib_temp(y_vert,x_vert) = 0;
                         y_vert = y_vert - 1;
                     end
@@ -80,15 +78,10 @@ for i = 1:m
 
             %display blob in separate labelled figure and continue.
             blob_count = blob_count + 1;
+            blob = I == blob_count + 1;
+            figure, imshow(blob);
+            title(['Blob ',num2str(blob_count)]);
             
-            %Store blobs in array
-            [mb,nb,fb] = size(blob_array);
-            blob_array_temp = blob_array;
-            blob_array = zeros(mb,nb,fb + 1);
-            blob_array(:,:,1:fb) = blob_array_temp;
-            blob_array(:,:,fb+1) = blob;
-
-            %Repeat till image is completely black
         end
     end
 end
