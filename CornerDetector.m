@@ -103,6 +103,8 @@ count = 0;
 min_corners = 3;
 max_corners = 10;
 thresh = 1;
+
+%Finding the threshold for the values
 while (count < min_corners || count > max_corners) && itr < 20
     if count < min_corners
         thresh = thresh*0.8;
@@ -112,6 +114,13 @@ while (count < min_corners || count > max_corners) && itr < 20
     Rtemp = (R>thresh);
     count = sum(sum(Rtemp));
     itr = itr + 1;
+end
+
+%Finding the locations of corners
+corners = find(Rtemp);
+for i = 1:size(corners,1)
+    Corners(i,1) = mod(corners(i),m);
+    Corners(i,2) = floor(corners(i)/m);
 end
 
 end

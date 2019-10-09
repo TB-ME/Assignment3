@@ -34,6 +34,7 @@ for i = 1:size(Diamond_Corners)
         disp("CORNER " + i + " ON DIAMOND: " + Diamond_Corners(i,1) + "," + Diamond_Corners(i,2));
     end
 end
+disp(" ");
 
 %Displaying the results
 for i = 1:size(Rectangle_Corners)
@@ -41,6 +42,7 @@ for i = 1:size(Rectangle_Corners)
         disp("CORNER " + i + " ON RECTANGLE: " + Rectangle_Corners(i,1) + "," + Rectangle_Corners(i,2));
     end
 end
+disp(" ");
 
 %Displaying the results
 for i = 1:size(Square_Corners)
@@ -48,6 +50,7 @@ for i = 1:size(Square_Corners)
         disp("CORNER " + i + " ON SQUARE: " + Square_Corners(i,1) + "," + Square_Corners(i,2));
     end
 end
+disp(" ");
 
 %Displaying the results
 for i = 1:size(Triangle_Corners)
@@ -55,4 +58,6 @@ for i = 1:size(Triangle_Corners)
         disp("CORNER " + i + " ON TRIANGLE: " + Triangle_Corners(i,1) + "," + Triangle_Corners(i,2));
     end
 end
+disp(" ");
+
 
