@@ -19,7 +19,7 @@ wtI = double(wt(:,:,1)/3 + wt(:,:,2)/3 + wt(:,:,3)/3)/255;
 
 %Run through Corner Dectector
 [m,n] = size(wdI);
-Dimaond_Corners = CornerDetector(wdI,m,n,2);
+Diamond_Corners = CornerDetector(wdI,m,n,2);
 [m,n] = size(wrI);
 Rectangle_Corners = CornerDetector(wrI,m,n,2);
 [m,n] = size(wsI);
