@@ -72,29 +72,14 @@ R = Ix2.*Iy2 - Ixy.^2 - k*(Ix2+Iy2).^2;
 %Filter Matrix by only keep max in a conv
 for i = 2:m-1
     for j = 2:n-1
-        
-        %Finding Max Val
-        max_val = 0;
+        %If center is a val remove surrounding
         for h = -1:1
             for k = -1:1
-                if max_val < R(i+h,j+k)
-                    max_val = R(i+h,j+k);
-                end
+                    if h ~= 0 && k ~= 0
+                        %R(i+k,j+k) = 0;
+                    end
             end
         end
-        
-        %Removing Non Max Vals
-        covered = 0;
-        for h = -1:1
-            for k = -1:1
-                if R(i+h,j+k) == max_val && covered == 0
-                    covered = 1;
-                else
-                    R(i+h,j+k) = 0;
-                end
-            end
-        end
-        
     end
 end
 
@@ -103,7 +88,7 @@ count = 0;
 min_corners = 3;
 max_corners = 10;
 thresh = 1;
-while (count < min_corners || count > max_corners) && itr < 20
+while (count < min_corners || count > max_corners) && itr < 10
     if count < min_corners
         thresh = thresh*0.8;
     elseif count > max_corners
