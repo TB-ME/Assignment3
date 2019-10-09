@@ -69,7 +69,7 @@ k = 0.04;
 %Estimating the Eigen Value
 R = Ix2.*Iy2 - Ixy.^2 - k*(Ix2+Iy2).^2;
 
-%Filter Matrix by only keep max in a conv
+%Filter Matrix by only keep max in a kernel of 3x3
 for i = 2:m-1
     for j = 2:n-1
         
