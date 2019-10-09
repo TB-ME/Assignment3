@@ -1,9 +1,6 @@
-function [Corners] = CornerDetector(img,m,n,minval)
-%Apply  a simple corner detecting algorithm
-
+function [Corners] = CornerDetector(img,m,n)
+%Apply Harris Corner Detector
 Corners = zeros(10,2);
-numCorners = 1;
-temp = zeros(m,n);
 
 %Applying Convolutions
 Ix = zeros(m,n);

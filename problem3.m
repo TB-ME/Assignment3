@@ -19,13 +19,13 @@ wtI = double(wt(:,:,1)/3 + wt(:,:,2)/3 + wt(:,:,3)/3)/255;
 
 %Run through Corner Dectector
 [m,n] = size(wdI);
-Diamond_Corners = CornerDetector(wdI,m,n,2);
+Diamond_Corners = CornerDetector(wdI,m,n);
 [m,n] = size(wrI);
-Rectangle_Corners = CornerDetector(wrI,m,n,2);
+Rectangle_Corners = CornerDetector(wrI,m,n);
 [m,n] = size(wsI);
-Square_Corners = CornerDetector(wsI,m,n,2);
+Square_Corners = CornerDetector(wsI,m,n);
 [m,n] = size(wtI);
-Triangle_Corners = CornerDetector(wtI,m,n,2.01);
+Triangle_Corners = CornerDetector(wtI,m,n);
 
 
 %Displaying the results
