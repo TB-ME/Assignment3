@@ -33,47 +33,46 @@ Ib_temp = I;
 %Main algorithm:
 %Cycle through pixels row-wise
 blob_count = 0;
-%Blobs are getting overwritten, creating a variable array so store them all
-%for displaying later
-blob_array = I;
 for i = 1:m
     for j = 1:n
         %Once a bright pixel is encountered move down the column and along row in both directions
-        if Ib_temp(i,j) == 1
+        if I(i,j) == 1
             ymin = i; ymax = i;
             xmin = j; xmax = j;
             y = i;
             x = j;
           
-            while Ib_temp(y,x) == 1
-                while Ib_temp(y,x) == 1
+            while I(y,x) == 1
+                while I(y,x) == 1
                     xmin = x;
                     x = x - 1;
                 end
                 x = j; %reset x coordinate
-                while Ib_temp(y,x) == 1
+                while I(y,x) == 1
                     xmax = x;
                     x = x + 1;
                 end
                 %Get blob
                I(y,xmin:xmax) = blob_count + 2;
-                %Blacken blob
-                Ib_temp(y,xmin:xmax) = 0;
                 
                 %Check if any vertical pixels have been missed
                 for x_vert = xmin:xmax
                     y_vert = y-1;
-                    while Ib_temp(y_vert,x_vert) == 1
+                    while I(y_vert,x_vert) == 1
                         I(y_vert,x_vert) = blob_count + 2;
-                        Ib_temp(y_vert,x_vert) = 0;
                         y_vert = y_vert - 1;
                     end
                 end
                 
                 %Itr params
-                x = j; %reset x coordinate
                 ymax = y;
                 y = y + 1;
+                
+                %find the next x coord
+                x = xmin;
+                while I(y,x) == 0 && x < xmax
+                    x = x + 1;
+                end
             end
 
             %display blob in separate labelled figure and continue.
@@ -85,3 +84,4 @@ for i = 1:m
         end
     end
 end
+
