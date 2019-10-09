@@ -60,4 +60,18 @@ for i = 1:size(Triangle_Corners)
 end
 disp(" ");
 
+subplot(2,2,1), imshow(wd)
+hold on
+plot(Diamond_Corners(:,2),Diamond_Corners(:,1),'ro')
 
+subplot(2,2,2), imshow(wr)
+hold on
+plot(Rectangle_Corners(:,2),Rectangle_Corners(:,1),'ro')
+
+subplot(2,2,3), imshow(ws)
+hold on
+plot(Square_Corners(:,2),Square_Corners(:,1),'ro')
+
+subplot(2,2,4), imshow(wt)
+hold on
+plot(Triangle_Corners(:,2),Triangle_Corners(:,1),'ro')
